@@ -1,3 +1,4 @@
+package com.github.grandeonde.listadecompras
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -7,54 +8,28 @@ import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.material.Button
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.github.grandeonde..ui.theme.BasicCodelabTheme
+import com.github.grandeonde.listadecompras.ui.theme.ListaDeComprasTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            BasicCodelabTheme {
-                // A surface container using the 'background' color from the theme
+            ListaDeComprasTheme() {
                 MyApp(modifier = Modifier.fillMaxSize())
             }
         }
     }
 }
 
-@Composable
-fun OnboardingScreen(modifier: Modifier = Modifier) {
-    // TODO: This state should be hoisted
-    var shouldShowOnboarding by remember { mutableStateOf(true) }
-
-    Column(
-        modifier = modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text("Welcome to the Basics Codelab!")
-        Button(
-            modifier = Modifier.padding(vertical = 24.dp),
-            onClick = { shouldShowOnboarding = false }
-        ) {
-            Text("Continue")
-        }
-    }
-}
-
 
 @Composable
-fun Greeting(name: String) {
+fun ListaCheia(name: String, quant: Int, desc: String ) {
 
     val expanded = remember { mutableStateOf(false)}
 
@@ -65,48 +40,72 @@ fun Greeting(name: String) {
         modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)
     ) {
         Row(modifier = Modifier.padding(24.dp)) {
-            Column(modifier = Modifier.weight(1f).padding(bottom = extraPadding)) {
-                Text(text = "BEM-VINDO, ")
+            Column(modifier = Modifier
+                .weight(1f)
+                .padding(bottom = extraPadding)) {
                 Text(text = name)
+                Text(if (expanded.value) "Quantidade: $quant" else " ")
+                Text(if (expanded.value) "$desc" else " ")
             }
             Button(
                 onClick = { expanded.value = !expanded.value }
             ) {
-                Text(if (expanded.value) "Mostrar Menos" else "Mostrar Mais")
+                Text(if (expanded.value) "Ver Menos" else "Ver Mais")
             }
         }
     }
 }
 
+data class ItemCompra(val nome: String, val quant: Int, val desc: String) {
+
+}
 
 @Composable
 fun MyApp(
     modifier: Modifier = Modifier,
-    names: List<String> = listOf("World", "Compose", "Teste")
+    listacompra: List<ItemCompra> = listOf(
+
+        ItemCompra(
+            nome="Batata",
+            quant=30,
+            desc="Tuberculo em que seu uso foi extremamente utila nos paises nordicos, sendo uma iguaria para culinarias diversas"),
+
+        ItemCompra(
+            nome="Macarrão",
+            quant=2,
+            desc="Massa de origem Italiana que serve para fazer diversos pratos e é usada na culinaria "),
+
+        ItemCompra(
+            nome="Sopa Em Lata",
+            quant=5,
+            desc="Para uma refeição mais rapida e geralmente usada para se livrar de uma gripe"),
+
+        ItemCompra(
+            nome="Caldo Knor",
+            quant=2,
+            desc="Geralmente usado para melhorar a sopa"),
+
+        ItemCompra(
+            nome="Pão",
+            quant=6,
+            desc="Massa fermentada que é comum no dia a dia dos brasileiros")),
+
 ) {
     Column(modifier = modifier.padding(vertical = 4.dp)) {
-        for (name in names) {
-            Greeting(name = name)
+        for (name in listacompra) {
+            ListaCheia(name = name.nome,
+                        quant = name.quant,
+                        desc = name.desc)
         }
     }
 }
 
-
-
 @Preview(showBackground = true, widthDp = 320)
 @Composable
 fun DefaultPreview() {
-    BasicCodelabTheme {
+    ListaDeComprasTheme() {
         MyApp(
         )
     }
 }
 
-
-@Preview(showBackground = true, widthDp = 320, heightDp = 320)
-@Composable
-fun OnboardingPreview() {
-    BasicCodelabTheme {
-        OnboardingScreen()
-    }
-}
